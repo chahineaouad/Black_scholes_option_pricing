@@ -9,7 +9,7 @@ class BlackScholes:
         self.rate = rate
         self.volatility = volatility
 
-        self.d1 = (np.log(spot/strike) + (rate * .5 * np.square(volatility)) * self.days) / volatility * np.sqrt(self.days)
+        self.d1 = (np.log(spot/strike) + (rate + .5 * np.square(volatility)) * self.days) / volatility * np.sqrt(self.days)
         self.d2 = self.d1 - self.volatility * np.sqrt(self.days)
 
     def call_price(self):
@@ -19,10 +19,10 @@ class BlackScholes:
         return self.strike * np.exp(-self.rate * self.days) * stats.norm.cdf(-self.d2) - self.spot * stats.norm.cdf(-self.d1)
 
     def call_delta(self):
-        return self.d1
+        return stats.norm.cdf(self.d1)
 
     def put_delta(self):
-        return self.d1 - 1
+        return stats.norm.cdf(self.d1) - 1
 
     def call_gamma(self):
         return np.exp(-.5 * np.square(self.d1)) / np.sqrt(2*np.pi) / (self.spot * self.volatility * np.sqrt(self.days))
